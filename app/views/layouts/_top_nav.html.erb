@@ -17,6 +17,24 @@
         <li>
           <%= link_to 'About Us', '/about' %>
         </li>
+
+        <% if current_user %>
+          <li>
+            <%= link_to 'Log Out', '/logout' %>
+          </li>
+        <% else %>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+              User
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><%= link_to 'Log In', '/login' %></li>
+              <li><%= link_to 'Sign Up', '/signup' %></li>
+            </ul>
+          </li>
+        <% end %>
+
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             Categories
