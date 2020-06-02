@@ -35,19 +35,41 @@ RSpec.describe User, type: :model do
       user.save()
       expect(user.errors.full_messages).to_not be_empty
     end
+
+    describe "Password" do
+      it "long enugh" do
+        user = User.new(name: "test", email: "test@test.com", password: "passpass", password_confirmation: "passpass")
+        user.save()
+        expect(user.errors.full_messages).to be_empty
+      end
+  
+      it "not long enough" do
+        user = User.new(name: "test", email: "test@test.com", password: "t", password_confirmation: "t")
+        user.save()
+        expect(user.errors.full_messages).to_not be_empty
+      end
+    end
   end
 
-  describe "Password" do
-    it "long enugh" do
-      user = User.new(name: "test", email: "test@test.com", password: "passpass", password_confirmation: "passpass")
-      user.save()
-      expect(user.errors.full_messages).to be_empty
+  describe '.authenticate_with_credentials' do
+    before(:each) do
+      @user = User.new(name: "test", email: "test@test.com", password: "passpass", password_confirmation: "passpass")
+      @user.save()
+    end
+    
+    it "basic success" do
+      result = User.authenticate_with_credentials("test@test.com", "passpass")
+      expect(result).to eq(@user)
     end
 
-    it "not long enough" do
-      user = User.new(name: "test", email: "test@test.com", password: "t", password_confirmation: "t")
-      user.save()
-      expect(user.errors.full_messages).to_not be_empty
+    it "remove surrounding spaces" do
+      result = User.authenticate_with_credentials(" test@test.com ", "passpass")
+      expect(result).to eq(@user)
+    end
+
+    it "email case insensitive" do
+      result = User.authenticate_with_credentials("TEST@test.com", "passpass")
+      expect(result).to eq(@user)
     end
   end
 end
