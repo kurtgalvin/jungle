@@ -36,4 +36,18 @@ RSpec.describe User, type: :model do
       expect(user.errors.full_messages).to_not be_empty
     end
   end
+
+  describe "Password" do
+    it "long enugh" do
+      user = User.new(name: "test", email: "test@test.com", password: "passpass", password_confirmation: "passpass")
+      user.save()
+      expect(user.errors.full_messages).to be_empty
+    end
+
+    it "not long enough" do
+      user = User.new(name: "test", email: "test@test.com", password: "t", password_confirmation: "t")
+      user.save()
+      expect(user.errors.full_messages).to_not be_empty
+    end
+  end
 end
